@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pronote_suivi – Mode d'emploi pour les parents</title>
+<style>
+  :root { --bleu:#1f4e78; --gris:#f3f5f8; --bord:#d5dbe3; --ok:#e7f4ea; --att:#fff4dc; }
+  body { font:17px/1.6 "Segoe UI", Arial, sans-serif; color:#1d2733; background:#fff; max-width:880px; margin:0 auto; padding:24px 20px 80px; }
+  h1 { color:var(--bleu); border-bottom:3px solid var(--bleu); padding-bottom:6px; line-height:1.25; }
+  h2 { color:var(--bleu); margin-top:2.4em; border-bottom:1px solid var(--bord); padding-bottom:4px; }
+  h3 { color:var(--bleu); margin-top:1.6em; }
+  h2 .num { display:inline-block; background:var(--bleu); color:#fff; border-radius:6px; padding:0 10px; margin-right:8px; font-size:.85em; }
+  code, pre { font-family:Consolas, "Courier New", monospace; font-size:.92em; }
+  code { background:var(--gris); padding:1px 5px; border-radius:3px; overflow-wrap:anywhere; }
+  .cmd { position:relative; margin:12px 0; }
+  .cmd pre { margin:0; padding-right:100px; }
+  pre { background:#1e2733; color:#e8edf3; padding:12px 14px; border-radius:6px; overflow-x:auto; }
+  pre.ecran { background:#0c0c0c; color:#d6d6d6; border-left:5px solid #777; }
+  .cmd button { position:absolute; top:7px; right:8px; font:600 13px "Segoe UI", Arial, sans-serif; background:#fff; color:var(--bleu); border:0; border-radius:4px; padding:5px 12px; cursor:pointer; }
+  .legende { font-size:.85em; color:#5b6876; margin:14px 0 -6px; }
+  .defile { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:.93em; }
+  th, td { border:1px solid var(--bord); padding:6px 9px; text-align:left; vertical-align:top; }
+  th { background:var(--bleu); color:#fff; }
+  tr:nth-child(even) td { background:var(--gris); }
+  .note, .att { padding:10px 14px; border-radius:6px; margin:14px 0; border-left:5px solid #4a9d5b; background:var(--ok); }
+  .att { border-left-color:#d9951a; background:var(--att); }
+  ol li, ul li { margin:6px 0; }
+  kbd { border:1px solid #9aa6b2; border-bottom-width:3px; border-radius:4px; padding:0 6px; font:.85em "Segoe UI", Arial, sans-serif; background:#fff; white-space:nowrap; }
+  .toc { background:var(--gris); padding:10px 18px; border-radius:6px; }
+  .toc a { color:var(--bleu); }
+  @media print { .cmd button { display:none; } pre { white-space:pre-wrap; } }
+</style>
+</head>
+<body>
+
+<h1>Suivre les heures de cours de son enfant avec Pronote<br><small>Mode d'emploi pas à pas, sans connaissance en informatique (version 0.9)</small></h1>
+
+<p><em>Outil non officiel, sans lien avec Index Éducation (éditeur de Pronote), la FCPE ou l'Éducation nationale.</em></p>
+
+<p>L'outil <strong>pronote_suivi</strong> regarde l'emploi du temps de votre enfant dans <strong>Pronote (espace Parents)</strong>, semaine après semaine, depuis la rentrée. Pour chaque semaine il prend une <strong>photo de l'écran</strong>, puis il fabrique un <strong>tableau Excel</strong> qui compte les heures prévues, les heures perdues (professeur absent, cours annulé, grève…) et les heures rattrapées, matière par matière.</p>
+
+<div class="note">
+<strong>Combien de temps ?</strong>
+La préparation (étapes 1 à 5) se fait <strong>une seule fois</strong> et prend environ 15 minutes. Ensuite, obtenir un nouveau tableau prend 3 à 5 minutes (étapes 6 à 8).
+</div>
+
+<div class="toc">
+<strong>Sommaire</strong>
+<ul>
+<li><a href="#avant">Ce qu'il vous faut</a></li>
+<li><strong>Une seule fois :</strong> <a href="#e1">1. Ranger le dossier</a> · <a href="#e2">2. Ouvrir l'invite de commandes</a> · <a href="#e3">3. Vérifier Python</a> · <a href="#e4">4. Installer Python</a> · <a href="#e5">5. Installer les compléments</a></li>
+<li><strong>À chaque fois :</strong> <a href="#e6">6. Lancer l'outil</a> · <a href="#e7">7. Se connecter à Pronote</a> · <a href="#e8">8. Lire le résultat</a></li>
+<li><strong><a href="#fcpe">Déclarer les cours non assurés à la FCPE</a></strong></li>
+<li><a href="#params">Les réglages (parametres.ini)</a> · <a href="#analyse">Comprendre les chiffres</a> · <a href="#refaire">Refaire le tableau sans Pronote</a> · <a href="#depannage">En cas de problème</a> · <a href="#conf">Confidentialité</a></li>
+</ul>
+</div>
+
+<h2 id="avant">Ce qu'il vous faut</h2>
+<ul>
+  <li>Un ordinateur sous <strong>Windows 10 ou 11</strong> relié à Internet.</li>
+  <li>Le navigateur <strong>Microsoft Edge</strong> (déjà présent sur Windows) ou <strong>Google Chrome</strong>.</li>
+  <li>Vos <strong>identifiants Pronote de parent</strong> (ou ceux de l'ENT de l'établissement). Vous les taperez vous-même, l'outil ne les enregistre pas.</li>
+  <li><strong>Excel</strong>, ou le logiciel gratuit LibreOffice, pour ouvrir le résultat.</li>
+</ul>
+
+<h2 id="e1"><span class="num">1</span>Ranger le dossier de l'outil</h2>
+<ol>
+  <li>Téléchargez <strong>pronote_suivi-0.9.zip</strong> depuis la <a href="https://github.com/IGNF-Xavier/pronote-heures-perdues/releases" target="_blank" rel="noopener">page des versions</a>.</li>
+  <li>Si vous avez reçu un fichier <strong>.zip</strong> : ouvrez votre dossier <em>Téléchargements</em>, faites un <strong>clic droit</strong> sur le fichier, choisissez <strong>Extraire tout…</strong>, puis <strong>Extraire</strong>.</li>
+  <li>Placez le dossier <code>pronote_suivi</code> à un endroit facile à retrouver, par exemple <em>Documents</em> ou <em>Téléchargements</em>.</li>
+  <li>Ouvrez ce dossier. Vous devez y voir :</li>
+</ol>
+<div class="defile"><table>
+<tr><th>Fichier (l'extension peut être masquée)</th><th>À quoi il sert</th></tr>
+<tr><td><code>LISEZMOI.html</code></td><td>Ce mode d'emploi.</td></tr>
+<tr><td><code>lancer.bat</code></td><td>Le bouton « démarrer » : on double-clique dessus.</td></tr>
+<tr><td><code>parametres.ini</code></td><td>Vos réglages (facultatif de le modifier).</td></tr>
+<tr><td><code>pronote_suivi.py</code></td><td>Le programme. Ne pas le modifier.</td></tr>
+<tr><td><code>requirements.txt</code></td><td>La liste des compléments à installer (étape 5).</td></tr>
+</table></div>
+
+<h2 id="e2"><span class="num">2</span>Ouvrir l'invite de commandes (« la fenêtre noire »)</h2>
+<p>L'<strong>invite de commandes</strong>, appelée aussi <strong>cmd</strong>, est une fenêtre noire dans laquelle on écrit des instructions. On tape (ou on colle) une ligne, puis on appuie sur la touche <kbd>Entrée</kbd>.</p>
+
+<h3>La méthode la plus simple : l'ouvrir directement dans le bon dossier</h3>
+<ol>
+  <li>Ouvrez le dossier <code>pronote_suivi</code> dans l'Explorateur de fichiers.</li>
+  <li>Cliquez dans la <strong>barre d'adresse</strong> en haut de la fenêtre (là où est écrit le chemin du dossier). Le texte devient bleu.</li>
+  <li>Tapez <code>cmd</code> à la place, puis appuyez sur <kbd>Entrée</kbd>.</li>
+</ol>
+<p>La fenêtre noire s'ouvre et la ligne se termine par le nom du dossier, par exemple :</p>
+<pre class="ecran">C:\Users\VotreNom\Downloads\pronote_suivi&gt;</pre>
+
+<h3>Autre méthode</h3>
+<ol>
+  <li>Appuyez sur la touche <kbd>⊞ Windows</kbd> du clavier, tapez <code>cmd</code>, puis <kbd>Entrée</kbd>.</li>
+  <li>Allez dans le dossier en collant la ligne ci-dessous (si le dossier est dans <em>Téléchargements</em>), puis <kbd>Entrée</kbd> :</li>
+</ol>
+<div class="cmd"><pre>cd /d "%USERPROFILE%\Downloads\pronote_suivi"</pre></div>
+<p>Si le dossier est dans <em>Documents</em> :</p>
+<div class="cmd"><pre>cd /d "%USERPROFILE%\Documents\pronote_suivi"</pre></div>
+
+<div class="note">
+<strong>Copier / coller</strong> : dans cette page, cliquez sur le bouton <strong>Copier</strong> à droite d'une ligne. Dans la fenêtre noire, faites un <strong>clic droit</strong> (ou <kbd>Ctrl</kbd> + <kbd>V</kbd>) pour coller, puis appuyez sur <kbd>Entrée</kbd>. Copiez <strong>une seule ligne à la fois</strong> et attendez que la précédente soit terminée.
+</div>
+
+<h2 id="e3"><span class="num">3</span>Vérifier si Python est installé</h2>
+<p><strong>Python</strong> est un logiciel gratuit qui permet de faire fonctionner l'outil. Dans la fenêtre noire, collez puis validez :</p>
+<div class="cmd"><pre>python --version</pre></div>
+<div class="defile"><table>
+<tr><th>Ce qui s'affiche</th><th>Ce que ça veut dire</th></tr>
+<tr><td><code>Python 3.10</code>, <code>3.11</code>, <code>3.12</code>, <code>3.13</code> ou <code>3.14</code> (suivi d'un autre chiffre, ex. <code>Python 3.13.17</code>)</td><td><strong>Parfait.</strong> Passez directement à l'<a href="#e5">étape 5</a>.</td></tr>
+<tr><td><code>'python' n'est pas reconnu en tant que commande…</code></td><td>Python n'est pas installé : faites l'<a href="#e4">étape 4</a>.</td></tr>
+<tr><td>Le <em>Microsoft Store</em> s'ouvre, ou un message parle du Store</td><td>Python n'est pas installé : fermez le Store et faites l'<a href="#e4">étape 4</a>.</td></tr>
+<tr><td>Un numéro plus ancien (<code>3.9</code> ou moins) ou plus récent (<code>3.15</code> et au-delà)</td><td>Installez la version de l'<a href="#e4">étape 4</a>.</td></tr>
+</table></div>
+
+<h2 id="e4"><span class="num">4</span>Installer Python (si nécessaire)</h2>
+<ol>
+  <li>Ouvrez cette page du <strong>site officiel</strong> de Python :
+    <a href="https://www.python.org/downloads/release/python-31317/" target="_blank" rel="noopener">https://www.python.org/downloads/release/python-31317/</a></li>
+  <li>Descendez jusqu'au tableau <strong>Files</strong> en bas de page et cliquez sur <strong>Windows installer (64-bit)</strong>. Un fichier nommé <code>python-3.13.17-amd64.exe</code> se télécharge.</li>
+  <li>Ouvrez ce fichier (dossier <em>Téléchargements</em>, double-clic).</li>
+  <li><strong>Important :</strong> en bas de la première fenêtre, <strong>cochez la case « Add python.exe to PATH »</strong>. Sans cela, la fenêtre noire ne trouvera pas Python.</li>
+  <li>Cliquez sur <strong>Install Now</strong>. Si Windows demande l'autorisation, répondez <em>Oui</em>.</li>
+  <li>Attendez le message <strong>Setup was successful</strong>, puis cliquez sur <strong>Close</strong>.</li>
+  <li><strong>Fermez la fenêtre noire</strong>, ouvrez-en une nouvelle (<a href="#e2">étape 2</a>) et revérifiez :</li>
+</ol>
+<div class="cmd"><pre>python --version</pre></div>
+<p>Vous devez lire <code>Python 3.13.17</code> (ou un autre numéro compris entre 3.10 et 3.14).</p>
+<div class="att">Si un autre numéro s'affiche encore (par exemple 3.15), remplacez dans toutes les lignes de ce mode d'emploi le mot <code>python</code> par <code>py -3.13</code>, et utilisez ces lignes au lieu du double-clic sur <code>lancer.bat</code>.</div>
+
+<h2 id="e5"><span class="num">5</span>Installer les compléments (une seule fois)</h2>
+<p>Dans la fenêtre noire ouverte <strong>dans le dossier de l'outil</strong>, collez puis validez :</p>
+<div class="cmd"><pre>python -m pip install -r requirements.txt</pre></div>
+<p>Beaucoup de lignes défilent pendant une à deux minutes. C'est terminé quand la ligne <code>C:\…\pronote_suivi&gt;</code> réapparaît.</p>
+<ul>
+  <li><code>Successfully installed …</code> ou <code>Requirement already satisfied</code> : tout va bien.</li>
+  <li><code>[notice] A new release of pip is available</code> : simple information, ignorez-la.</li>
+  <li>Du texte contenant <code>ERROR</code> : vérifiez votre connexion Internet et que vous êtes bien dans le dossier de l'outil (voir <a href="#depannage">En cas de problème</a>).</li>
+</ul>
+<p>Il n'y a pas d'autre navigateur à installer : l'outil utilise Edge ou Chrome déjà présents.</p>
+
+<h2 id="e6"><span class="num">6</span>Lancer l'outil et répondre aux questions</h2>
+<p><strong>Double-cliquez sur <code>lancer.bat</code></strong> dans le dossier. (Ou, dans la fenêtre noire du dossier :)</p>
+<div class="cmd"><pre>python pronote_suivi.py</pre></div>
+<div class="att">Au premier double-clic, Windows peut afficher « Windows a protégé votre ordinateur », car le fichier vient d'Internet ou d'une autre personne. Si vous avez reçu l'outil d'une <strong>personne de confiance</strong> : cliquez sur <em>Informations complémentaires</em>, puis <em>Exécuter quand même</em>. Sinon, ne le lancez pas.</div>
+
+<p>L'outil pose ses questions. <strong>Appuyer simplement sur <kbd>Entrée</kbd> accepte la réponse proposée entre crochets.</strong></p>
+
+<h3>Question 1 : l'adresse de Pronote (seulement la première fois)</h3>
+<p class="legende">Exemple d'écran</p>
+<pre class="ecran">Adresse de votre Pronote (copiez-la depuis votre navigateur, puis collez-la ici)
+   [Entrée = ouvrir un navigateur vide, par exemple pour passer par votre ENT] :</pre>
+<ul>
+  <li>Dans votre navigateur habituel, ouvrez Pronote comme d'habitude, cliquez dans la <strong>barre d'adresse</strong> tout en haut, puis faites <kbd>Ctrl</kbd> + <kbd>C</kbd> (copier).</li>
+  <li>Revenez à la fenêtre noire, faites un clic droit (coller), puis <kbd>Entrée</kbd>. L'adresse ressemble à <code>https://XXXXXXXX.index-education.net/pronote/parent.html</code>.</li>
+  <li>Vous passez par l'<strong>ENT</strong> de la région ou du collège ? Appuyez juste sur <kbd>Entrée</kbd> : vous irez sur l'ENT vous-même dans le navigateur qui s'ouvre.</li>
+</ul>
+<p>L'adresse saisie est mémorisée : la question ne revient plus.</p>
+<div class="note">Si cette question n'apparaît pas, c'est qu'une adresse est déjà enregistrée dans <code>parametres.ini</code>. <strong>Vérifiez que c'est bien celle de votre établissement</strong> (voir <a href="#params">Les réglages</a>) ; pour la ressaisir, effacez ce qui suit <code>url =</code>.</div>
+
+<h3>Question 2 : la date de la rentrée</h3>
+<pre class="ecran">Date de la rentrée (début de l'analyse) ?
+   [Entrée = 31/08/2026]  ou tapez une date JJ/MM/AAAA :</pre>
+<p><kbd>Entrée</kbd> pour garder le <strong>31/08/2026</strong>. Sinon tapez la date sous la forme <strong>jour/mois/année</strong>, avec les barres : <code>01/09/2026</code>.</p>
+
+<h3>Question 3 : jusqu'à quelle semaine ?</h3>
+<pre class="ecran">Jusqu'à quelle semaine ? Par défaut la semaine d'aujourd'hui (semaine du 23/11/2026).
+   [Entrée = 27/11/2026]  ou tapez une date JJ/MM/AAAA :</pre>
+<p><kbd>Entrée</kbd> pour aller <strong>jusqu'à la semaine d'aujourd'hui</strong>. Sinon tapez n'importe quel jour de la dernière semaine voulue, par exemple <code>16/10/2026</code>.</p>
+
+<h2 id="e7"><span class="num">7</span>Se connecter à Pronote, puis laisser faire</h2>
+<ol>
+  <li>Une <strong>nouvelle fenêtre de navigateur</strong> s'ouvre. Dans cette fenêtre-là (pas dans votre navigateur habituel) :
+    <ul>
+      <li>connectez-vous avec vos identifiants de parent (ou via l'ENT) ;</li>
+      <li>choisissez votre enfant si vous en avez plusieurs ;</li>
+      <li>ouvrez <strong>Vie scolaire → Emploi du temps</strong> ;</li>
+      <li>attendez que la <strong>grille de la semaine</strong> soit entièrement affichée, avec la ligne de numéros de semaines au-dessus.</li>
+    </ul>
+  </li>
+  <li>Revenez à la <strong>fenêtre noire</strong> et appuyez sur <kbd>Entrée</kbd>.</li>
+  <li><strong>Ne touchez plus au navigateur.</strong> L'outil clique tout seul sur chaque semaine (quelques secondes par semaine) et la fenêtre noire l'indique :</li>
+</ol>
+<pre class="ecran">Bande des semaines détectée (44 semaines d'école).
+[sem.  1] 31/08/2026 -&gt; 21 cours détectés
+[sem.  2] 07/09/2026 -&gt; 28 cours détectés
+...
+11 semaine(s) capturée(s).
+
+Excel : C:\...\pronote_suivi\sortie\pronote_analyse_20261127.xlsx</pre>
+<p>Quand le message <em>Appuyez sur une touche pour continuer</em> apparaît, c'est fini : vous pouvez fermer la fenêtre. Les semaines de vacances ne sont pas listées, c'est normal. Pour tout arrêter en cours de route : <kbd>Ctrl</kbd> + <kbd>C</kbd> dans la fenêtre noire.</p>
+
+<h2 id="e8"><span class="num">8</span>Lire le résultat</h2>
+<p>Dans le dossier <code>pronote_suivi</code>, ouvrez le dossier <strong><code>sortie</code></strong>, puis le fichier <strong><code>pronote_analyse_…xlsx</code></strong> (le plus récent). Les onglets sont en bas de la fenêtre Excel :</p>
+<div class="defile"><table>
+<tr><th>Onglet</th><th>Ce que vous y lisez</th></tr>
+<tr><td><strong>Synthèse</strong></td><td>L'essentiel : heures prévues, heures perdues (par motif), heures rattrapées, solde et pourcentages.</td></tr>
+<tr><td><strong>Saisie FCPE</strong></td><td>Ce qu'il faut taper dans l'outil de la FCPE (voir <a href="#fcpe">plus bas</a>).</td></tr>
+<tr><td><strong>Justificatifs FCPE</strong></td><td>La liste, cours par cours, avec la photo correspondante.</td></tr>
+<tr><td><strong>Par matière</strong></td><td>Une ligne par matière avec un TOTAL, et deux graphiques : les heures prévues (en bleu ce qui a été assuré, en rouge ce qui a été perdu, total écrit à droite de chaque barre) et la part perdue en %. Le petit tableau gris à droite sert aux graphiques : les <code>#N/A</code> qu'il contient sont normaux.</td></tr>
+<tr><td><strong>Par semaine</strong></td><td>La même chose, semaine par semaine.</td></tr>
+<tr><td><strong>Détail</strong></td><td>Un cours par ligne (date, heure, matière, catégorie). Les petites flèches en haut des colonnes permettent de filtrer. Si un cours est mal classé, changez sa <em>Catégorie</em> : les totaux se recalculent.</td></tr>
+<tr><td><strong>Captures</strong></td><td>La photo de chaque semaine, avec un lien pour l'agrandir. En cas de doute, c'est elle qui fait foi.</td></tr>
+</table></div>
+<p>Un tableau existant n'est <strong>jamais écrasé</strong> : un nouveau s'appelle <code>…_v2.xlsx</code>, <code>_v3</code>, etc. Les photos sont aussi dans <code>sortie\semaines</code>.</p>
+<p><strong>La fois suivante</strong>, refaites seulement les étapes <a href="#e6">6</a>, <a href="#e7">7</a> et 8.</p>
+
+<h2 id="fcpe">Déclarer les cours non assurés à la FCPE (facultatif)</h2>
+<p>La FCPE, fédération de parents d'élèves, propose l'outil en ligne <strong>Ouyapacours</strong>, ouvert aux parents, adhérents ou non :
+<a href="https://ouyapacours.fcpe.asso.fr/" target="_blank" rel="noopener">https://ouyapacours.fcpe.asso.fr/</a>. L'onglet <strong>Saisie FCPE</strong> du tableau Excel reprend les rubriques de son formulaire.</p>
+<ol>
+  <li>Sur le site, créez votre compte ou connectez-vous, puis ouvrez le formulaire de déclaration.</li>
+  <li>Choisissez votre <strong>Enfant</strong>. Vérifiez <strong>Ville / code postal</strong>, <strong>Etablissement</strong> et <strong>Classe</strong> (en haut de l'onglet Excel).</li>
+  <li>Dans l'onglet Excel, prenez la <strong>déclaration n° 1</strong> : saisissez sa <strong>Matiere</strong>, puis la première ligne : <strong>Date</strong> et <strong>Duree</strong>.</li>
+  <li>Pour chaque ligne suivante de la même déclaration, cliquez sur <strong>+ Ajouter des heures</strong> et saisissez la date et la durée.</li>
+  <li>Cliquez sur <strong>Valider</strong>, puis notez la date du jour dans les cases jaunes <em>Saisi le</em>. Passez à la déclaration suivante.</li>
+  <li>La colonne <em>Après validation</em> indique s'il faut revenir sur le site <strong>signaler la fin</strong> du non-remplacement (les cours ont repris) ou, plus tard, sa <strong>prolongation</strong>.</li>
+</ol>
+<p>Les photos justificatives sont dans <code>sortie\captures_fcpe\</code> (un sous-dossier par tableau) : le bandeau du haut, avec les noms et la photo, est retiré et les cours concernés sont entourés en rouge. <strong>Les noms des professeurs restent visibles</strong> dans la grille.</p>
+<ul>
+  <li><strong>Seuls les cours « Prof absent » sont retenus par défaut.</strong> Pour ajouter par exemple les cours annulés ou la grève : réglage <code>motifs_fcpe</code>, puis <a href="#refaire">refaites le tableau</a>.</li>
+  <li>La durée est en heures entières (un cours de 55 minutes compte 1 h). Les cours rattrapés, les matières exclues et les cours à venir ne sont pas comptés.</li>
+  <li>Les onglets FCPE sont figés : après une correction dans <em>Détail</em>, ils ne changent pas.</li>
+  <li><strong>La fois suivante</strong>, un nouveau tableau reprend toutes les dates depuis la rentrée : comparez avec les cases <em>Saisi le</em> du précédent et n'ajoutez que les nouvelles dates à vos déclarations, pour ne rien compter deux fois.</li>
+</ul>
+
+<h2 id="params">Les réglages (fichier <code>parametres.ini</code>)</h2>
+<p><strong>Vous n'avez normalement rien à modifier.</strong> Pour changer un réglage :</p>
+<ol>
+  <li>Clic droit sur <code>parametres.ini</code> → <strong>Modifier dans le Bloc-notes</strong> (ou <em>Ouvrir avec</em> → <em>Bloc-notes</em>).</li>
+  <li>Changez uniquement ce qui se trouve <strong>après le signe <code>=</code></strong>. Les lignes qui commencent par <code>;</code> sont des explications.</li>
+  <li>Enregistrez avec <kbd>Ctrl</kbd> + <kbd>S</kbd>, puis fermez.</li>
+</ol>
+<div class="defile"><table>
+<tr><th>Réglage</th><th>Rôle et exemple</th></tr>
+<tr><td><code>url</code></td><td>Adresse de Pronote. Vide : l'outil la demande puis l'enregistre ici.<br><code>url = https://XXXXXXXX.index-education.net/pronote/parent.html</code></td></tr>
+<tr><td><code>rentree</code></td><td>Date de rentrée proposée à la question 2 (31/08/2026 si vide).<br><code>rentree = 31/08/2026</code></td></tr>
+<tr><td><code>semaine</code></td><td>Fin proposée à la question 3. <strong>Laisser vide</strong> pour « la semaine d'aujourd'hui ».</td></tr>
+<tr><td><code>dossier</code></td><td>Nom du dossier de résultats (<code>sortie</code>). Pour un deuxième enfant : <code>dossier = sortie_enfant2</code>, afin de ne pas mélanger.</td></tr>
+<tr><td><code>matieres_exclues</code></td><td>Matières visibles dans le tableau mais <strong>non comptées</strong> dans les totaux ni les graphiques. Par défaut <code>VIE DE CLASSE</code> (créneau réservé mais rarement utilisé). Séparer par des points-virgules, écrire comme dans Pronote. Vide = tout compter.</td></tr>
+<tr><td><code>ville</code>, <code>etablissement</code>, <code>classe</code></td><td>Recopiés en haut de l'onglet « Saisie FCPE ». Ex. <code>classe = 4ème</code></td></tr>
+<tr><td><code>motifs_fcpe</code></td><td>Motifs à déclarer à la FCPE (défaut <code>Prof absent</code>). On peut ajouter <code>Annulé</code>, <code>Grève</code>, <code>Dispensé</code>, <code>Absence élève</code>, séparés par des points-virgules.</td></tr>
+<tr><td><code>regroupement_fcpe</code></td><td><code>matiere</code> (défaut) : une déclaration par matière. <code>periode</code> : une déclaration à chaque nouvelle absence après reprise des cours.</td></tr>
+<tr><td><code>fenetre_jours</code></td><td>Un cours déplacé est relié à un cours perdu de la même matière distant d'au plus ce nombre de jours (14).</td></tr>
+<tr><td><code>attente_ms</code></td><td>Pause après chaque semaine, en millièmes de seconde (1500). Mettre <code>3000</code> si Pronote ou la connexion sont lents.</td></tr>
+<tr><td><code>navigateur</code></td><td><code>msedge</code> ou <code>chrome</code>. Vide = Edge, sinon Chrome.</td></tr>
+<tr><td><code>mode_manuel</code></td><td>Dépannage : <code>oui</code> = vous changez de semaine vous-même et appuyez sur Entrée à chaque fois.</td></tr>
+<tr><td><code>selecteur_cours</code>, <code>selecteur_suivant</code></td><td>Réglages techniques de dépannage : à laisser vides.</td></tr>
+</table></div>
+
+<h2 id="analyse">Comprendre les chiffres</h2>
+<div class="defile"><table>
+<tr><th>Catégorie</th><th>Ce que Pronote indique sur le cours</th><th>Comptée comme</th></tr>
+<tr><td>Prof absent</td><td>« Prof. absent », « enseignant absent »</td><td>heure perdue</td></tr>
+<tr><td>Annulé</td><td>« Cours annulé »</td><td>heure perdue</td></tr>
+<tr><td>Grève</td><td>le mot « grève » apparaît sur le cours</td><td>heure perdue</td></tr>
+<tr><td>Dispensé / Absence élève</td><td>« dispensé », « absence »</td><td>heure perdue</td></tr>
+<tr><td>Déplacé/Modifié</td><td>« Cours déplacé », « Cours modifié »</td><td>heure <strong>rattrapée</strong></td></tr>
+<tr><td>Remplacé</td><td>« Remplacement »</td><td>cours assuré par un autre professeur (information)</td></tr>
+<tr><td>Sortie/Événement</td><td>« sortie », « voyage », « événement », « stage »</td><td>information</td></tr>
+<tr><td>Maintenu</td><td>rien de particulier, ou « changement de salle »</td><td>cours normal</td></tr>
+</table></div>
+<ul>
+  <li><strong>Heures prévues</strong> : les heures de l'emploi du temps, sans les créneaux ajoutés pour un rattrapage.</li>
+  <li><strong>Heures perdues</strong> : professeur absent + annulé + grève + dispensé + absence.</li>
+  <li><strong>Heures rattrapées</strong> : cours déplacés ou modifiés.</li>
+  <li><strong>Solde net</strong> : rattrapées − perdues. Un nombre négatif = des heures réellement perdues.</li>
+  <li><strong>% perdu brut</strong> : perdues ÷ prévues. <strong>% perdu net</strong> : après déduction des rattrapages.</li>
+  <li>La durée est celle indiquée par Pronote : un cours de 55 minutes compte pour 0,92 heure.</li>
+  <li>Une grève n'est reconnue que si Pronote l'écrit ; sinon l'heure apparaît comme « Prof absent » ou « Annulé ».</li>
+  <li>Les rattrapages qui n'apparaissent pas dans l'emploi du temps Pronote ne sont pas comptés.</li>
+</ul>
+<p><strong>Matières non comptées</strong> (Vie de classe par défaut) : elles restent visibles dans <em>Détail</em> et, en gris, dans <em>Par matière</em>. La <em>Synthèse</em> rappelle ce qui est exclu. Pour exclure un seul cours, passez sa case « Inclus dans les calculs ? » à <em>Non</em> dans <em>Détail</em>.</p>
+
+<h2 id="refaire">Refaire le tableau sans se reconnecter à Pronote</h2>
+<p>Après avoir changé un réglage (par exemple les matières exclues), on peut refaire le tableau à partir des semaines déjà enregistrées. Dans la fenêtre noire du dossier :</p>
+<div class="cmd"><pre>python pronote_suivi.py --etape analyse</pre></div>
+
+<h2 id="depannage">En cas de problème</h2>
+<div class="defile"><table>
+<tr><th>Ce que vous voyez</th><th>Que faire</th></tr>
+<tr><td>La fenêtre noire s'ouvre et se referme aussitôt</td><td>Lancez avec <code>python pronote_suivi.py</code> dans une fenêtre noire (étape 2) pour lire le message.</td></tr>
+<tr><td><code>'python' n'est pas reconnu</code> / « Python n'est pas installé »</td><td>Refaites l'<a href="#e4">étape 4</a> en cochant « Add python.exe to PATH », puis ouvrez une <em>nouvelle</em> fenêtre noire.</td></tr>
+<tr><td><code>can't open file … pronote_suivi.py</code> ou <code>No such file … requirements.txt</code></td><td>La fenêtre noire n'est pas dans le bon dossier : reprenez l'<a href="#e2">étape 2</a>.</td></tr>
+<tr><td><code>Un composant n'est pas installé</code></td><td>Refaites l'<a href="#e5">étape 5</a>.</td></tr>
+<tr><td><code>ERROR</code> pendant l'installation des compléments</td><td>Vérifiez Internet. Un ordinateur professionnel peut bloquer l'installation : essayez sur un ordinateur personnel.</td></tr>
+<tr><td><code>Date non comprise</code></td><td>Écrivez jour/mois/année avec les barres : <code>31/08/2026</code>.</td></tr>
+<tr><td><code>Je ne vois pas l'emploi du temps</code></td><td>Dans la fenêtre ouverte par l'outil, allez sur <em>Vie scolaire → Emploi du temps</em>, attendez la grille, puis <kbd>Entrée</kbd>.</td></tr>
+<tr><td><code>Navigation semaine par semaine…</code></td><td>La ligne des numéros de semaines n'a pas été trouvée. Vérifiez la page affichée. Sinon mettez <code>mode_manuel = oui</code>.</td></tr>
+<tr><td><code>0 cours détectés</code> sur une semaine d'école, ou dates qui n'avancent pas</td><td>Augmentez <code>attente_ms</code> (3000), ne touchez pas au navigateur pendant le parcours. Si cela persiste, Pronote a peut-être changé : demandez de l'aide à la personne qui vous a transmis l'outil, avec les images de <code>sortie\semaines</code>.</td></tr>
+<tr><td><code>Impossible de lancer un navigateur</code></td><td>Fermez les fenêtres ouvertes par un précédent lancement de l'outil et recommencez. Vérifiez qu'Edge ou Chrome est installé.</td></tr>
+<tr><td><code>Permission denied</code></td><td>Fermez le fichier Excel et les fenêtres ouvertes par l'outil, puis recommencez.</td></tr>
+</table></div>
+
+<h2 id="conf">Confidentialité</h2>
+<ul>
+  <li><strong>L'outil ne lit ni n'enregistre votre mot de passe</strong> : vous vous connectez vous-même dans le navigateur.</li>
+  <li>Tout reste sur votre ordinateur ; seuls les échanges habituels avec Pronote (ou l'ENT) passent par Internet.</li>
+  <li>Le dossier <code>sortie\profil_navigateur</code> garde la trace de votre connexion : <strong>supprimez-le</strong> après usage, surtout sur un ordinateur partagé.</li>
+  <li>Les photos et le tableau contiennent le nom de votre enfant, ses matières et ses professeurs : ne les diffusez pas sans précaution.</li>
+  <li>Avant de <strong>transmettre l'outil à quelqu'un</strong> : retirez tous les dossiers <code>sortie…</code> et effacez dans <code>parametres.ini</code> ce qui suit <code>url =</code>, <code>ville =</code>, <code>etablissement =</code> et <code>classe =</code>.</li>
+</ul>
+
+<script>
+// boutons « Copier » sur les lignes de commande
+document.querySelectorAll('.cmd').forEach(function (bloc) {
+  var pre = bloc.querySelector('pre'), b = document.createElement('button');
+  b.type = 'button'; b.textContent = 'Copier';
+  function selectionner() {
+    var r = document.createRange(); r.selectNodeContents(pre);
+    var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+  function fait() { b.textContent = 'Copié ✓'; setTimeout(function () { b.textContent = 'Copier'; }, 1800); }
+  function secours() {
+    selectionner();
+    try { if (document.execCommand('copy')) { fait(); return; } } catch (e) {}
+    b.textContent = 'Ctrl + C';
+  }
+  b.addEventListener('click', function () {
+    if (navigator.clipboard) { navigator.clipboard.writeText(pre.textContent).then(fait, secours); }
+    else { secours(); }
+  });
+  bloc.appendChild(b);
+});
+</script>
+</body>
+</html>

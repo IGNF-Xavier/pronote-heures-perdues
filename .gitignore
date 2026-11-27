@@ -1,0 +1,12 @@
+# résultats : données de l'enfant, captures, session du navigateur - ne jamais publier
+sortie*/
+semaines/
+captures_fcpe/
+profil_navigateur/
+_miniatures/
+*.xlsx
+~$*
+
+__pycache__/
+*.pyc
+*.zip
